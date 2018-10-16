@@ -23,6 +23,8 @@ import '../components/notifications/NotificationsList.jsx';
 import '../components/notifications/NotificationsItem.jsx';
 import '../components/notifications/NotificationsMenuButton.jsx';
 import '../components/notifications/SubscribeTo.jsx';
+import '../components/notifications/NotificationSettings.jsx';
+import '../components/notifications/NotificationTypeSettings.jsx';
 
 import '../components/Layout.jsx';
 

@@ -1,6 +1,7 @@
 import Users from "meteor/vulcan:users";
 import { getSetting } from "meteor/vulcan:core"
 import { generateIdResolverSingle } from '../../modules/utils/schemaUtils'
+import { notificationTypeSchema } from '../../subscriptions/notification_types';
 
 const formGroups = {
   moderationGroup: {
@@ -17,6 +18,11 @@ const formGroups = {
     order: 10,
     name: "notifications",
     label: "Notifications"
+  },
+  subscriptions: {
+    order: 11,
+    name: "subscriptions",
+    label: "Subscriptions"
   },
   emails: {
     order: 15,
@@ -71,6 +77,27 @@ Users.addField([
       viewableBy: ['members'],
       editableBy: ['members'],
       insertableBy: ['members'],
+    }
+  },
+  
+  {
+    fieldName: 'notificationSettings',
+    fieldSchema: {
+      type: Array,
+      optional: true,
+      group: formGroups.subscriptions,
+      control: "LWNotificationSettings",
+      viewableBy: ['members'],
+      editableBy: ['members'],
+      insertableBy: ['members'],
+    }
+  },
+  
+  {
+    fieldName: 'notificationSettings.$',
+    fieldSchema: {
+      type: notificationTypeSchema,
+      optional: true,
     }
   },
 
