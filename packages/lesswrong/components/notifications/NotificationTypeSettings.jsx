@@ -3,10 +3,12 @@ import { Components, registerComponent } from 'meteor/vulcan:core';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import { notificationTypes } from '../../lib/subscriptions/notification_types';
+import CloseIcon from '@material-ui/icons/Close';
 import get from 'lodash/get';
 
 const styles = theme => ({
   root: {
+    position: "relative",
     border: `1px solid ${grey[400]}`,
     padding: 8,
     marginTop: 8,
@@ -15,12 +17,13 @@ const styles = theme => ({
   },
   settingsForm: {
   },
-  removeButtonWrapper: {
-  },
-  removeButton: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "canter",
+  closeIcon: {
+    position: "absolute",
+    right: 8,
+    top: 8,
+    color: "rgba(0,0,0,0.5)",
+    height: "15px",
+    width: "15px",
   },
 });
 
@@ -34,14 +37,17 @@ class NotificationTypeSettings extends PureComponent
     const notificationType = value.type;
     const typeLabel = notificationTypes[notificationType].name;
     
+    const fieldsToShow = notificationTypes[notificationType].fields;
+    
     return (
       <div className={classes.root}>
         <label className={classes.typeLabel}>
           {typeLabel}
         </label>
         <div className={classes.settingsForm}>
-          {nestedFields.map((field, i) => {
-            return (
+          {nestedFields
+            .filter(field => _.find(fieldsToShow, f=>f===field.name))
+            .map((field, i) =>
               <Components.FormComponent
                 key={i}
                 {...otherProps}
@@ -49,19 +55,13 @@ class NotificationTypeSettings extends PureComponent
                 path={`${path}.${field.name}`}
                 itemIndex={itemIndex}
               />
-            );
-          })}
+            )
+          }
         </div>
         {isArray && [
-          <div key="remove-button" className={classes.removeButtonWrapper}>
-            <Components.Button
-              className={classes.removeButton}
-              variant="danger" size="small"
-              onClick={() => { removeItem(name); }}
-            >
-              <Components.IconRemove height={12} width={12} />
-            </Components.Button>
-          </div>,
+          <a>
+            <CloseIcon className={classes.closeIcon} onClick={() => removeItem(name)}/>
+          </a>
         ]}
       </div>
     );
