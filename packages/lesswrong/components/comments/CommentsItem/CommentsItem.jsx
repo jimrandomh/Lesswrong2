@@ -9,34 +9,18 @@ import Users from 'meteor/vulcan:users';
 import classNames from 'classnames';
 import FontIcon from 'material-ui/FontIcon';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import MenuItem from 'material-ui/MenuItem';
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
 import { shallowEqual, shallowEqualExcept } from '../../../lib/modules/utils/componentUtils';
 import { withStyles } from '@material-ui/core/styles';
 import { commentBodyStyles } from '../../../themes/stylePiping'
-
-const moreActionsMenuStyle = {
-  position: 'inherit',
-}
-
-const moreActionsMenuButtonStyle = {
-  padding: '0px',
-  width: 'auto',
-  height: 'auto',
-}
-
-const moreActionsMenuIconStyle = {
-  padding: '0px',
-  width: '16px',
-  height: '16px',
-  color: 'rgba(0,0,0,0.5)',
-}
+import withErrorBoundary from '../../common/withErrorBoundary'
 
 const styles = theme => ({
+  root: {
+    "&:hover $menu": {
+      opacity:1
+    }
+  },
   commentStyling: {
     ...commentBodyStyles(theme)
   },
@@ -47,6 +31,11 @@ const styles = theme => ({
   },
   postTitle: {
     marginRight: 5,
+  },
+  menu: {
+    float:"right",
+    opacity:.35,
+    marginRight:-5
   }
 })
 
@@ -57,7 +46,6 @@ class CommentsItem extends Component {
       showReply: false,
       showEdit: false,
       showReport: false,
-      showStats: false,
       showParent: false
     };
   }
@@ -73,14 +61,6 @@ class CommentsItem extends Component {
   showReport = (event) => {
     event.preventDefault();
     this.setState({showReport: true});
-  }
-
-  showStats = (event) => {
-    event.preventDefault();
-    this.setState({showStats: true});
-  }
-  hideStats = (event) => {
-    this.setState({showStats: false});
   }
 
   showReply = (event) => {
@@ -110,7 +90,7 @@ class CommentsItem extends Component {
   }
 
   removeSuccessCallback = ({documentId}) => {
-    this.props.flash("Successfully deleted comment", "success");
+    this.props.flash({messageString: "Successfully deleted comment", type: "success"});
   }
 
   toggleShowParent = () => {
@@ -131,7 +111,7 @@ class CommentsItem extends Component {
     if (comment.body) {
       // Replace Markdown Links with just their display text
       let bodyReplaceLinks = comment.body.replace(/(?:__|[*#])|\[(.*?)\]\(.*?\)/gm, '$1');
-      
+
       let commentExcerpt = bodyReplaceLinks.substring(0,300).split("\n\n");
 
       const lastElement = commentExcerpt.slice(-1)[0];
@@ -160,10 +140,11 @@ class CommentsItem extends Component {
       </div>
     )
 
-    if (comment) {
+    if (comment && post) {
       return (
         <div className={
           classNames(
+            classes.root,
             "comments-item",
             "recent-comments-node",
             {
@@ -263,74 +244,50 @@ class CommentsItem extends Component {
   }
 
   renderMenu = () => {
-    const { comment, currentUser } = this.props;
+    const { comment, currentUser, classes } = this.props;
     const post = this.props.post || comment.post;
     if (comment && post) {
       return (
-        <div className="comments-more-actions-menu">
-            <IconMenu
-              iconButtonElement={<IconButton style={moreActionsMenuButtonStyle}><MoreVertIcon /></IconButton>}
-              anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-              targetOrigin={{horizontal: 'right', vertical: 'top'}}
-              style={moreActionsMenuStyle}
-              iconStyle={moreActionsMenuIconStyle}
-              useLayerForClickAway={true}
-            >
-              { this.renderEditMenuItem() }
-              { this.renderSubscribeMenuItem() }
-              { this.renderReportMenuItem() }
-              { this.renderStatsMenuItem() }
-              { this.renderDeleteMenuItem() }
-              { this.renderMoveToAlignmentMenuItem() }
-              { Users.canModeratePost(currentUser, post) &&
-                post.user && Users.canModeratePost(post.user, post) &&
-                <MenuItem
-                  className="comment-menu-item-ban-user-submenu"
-                  primaryText="Ban User"
-                  rightIcon={<ArrowDropRight />}
-                  menuItems={[
-                    <Components.BanUserFromPostMenuItem
-                      key='banUserFromPost'
-                      comment={comment}
-                      post={post}
-                      currentUser={currentUser}
-                    />,
-                    <Components.BanUserFromAllPostsMenuItem
-                      key='banUserFromAllPosts'
-                      comment={comment}
-                      post={post}
-                      currentUser={currentUser}
-                    />
-                  ]}
-                />}
-            </IconMenu>
-            { this.state.showReport &&
-              <Components.ReportForm
-                commentId={comment._id}
-                postId={comment.postId}
-                link={"/posts/" + comment.postId + "/a/" + comment._id}
-                userId={currentUser._id}
-                open={true}
-              />
-            }
-            { this.state.showStats &&
-              <Dialog title="Comment Stats"
-                modal={false}
-                actions={<FlatButton label="Close" primary={true} onClick={ this.hideStats }/>}
-                open={this.state.showStats}
-                onRequestClose={this.hideStats}
-              >
-                <Components.CommentVotesInfo documentId={comment._id} />
-              </Dialog>
-            }
-        </div>
+        <span className={classes.menu}>
+          <Components.CommentsMenu>
+            { this.renderSubscribeMenuItem() }
+            { this.renderEditMenuItem() }
+            { this.renderReportMenuItem() }
+            { this.renderDeleteMenuItem() }
+            { this.renderMoveToAlignmentMenuItem() }
+            { Users.canModeratePost(currentUser, post) &&
+              post.user && Users.canModeratePost(post.user, post) &&
+              <MenuItem
+                className="comment-menu-item-ban-user-submenu"
+                primaryText="Ban User"
+                rightIcon={<ArrowDropRight />}
+                menuItems={[
+                  <Components.BanUserFromPostMenuItem
+                    key='banUserFromPost'
+                    comment={comment}
+                    post={post}
+                    currentUser={currentUser}
+                  />,
+                  <Components.BanUserFromAllPostsMenuItem
+                    key='banUserFromAllPosts'
+                    comment={comment}
+                    post={post}
+                    currentUser={currentUser}
+                  />
+                ]}
+              />}
+              { this.state.showReport &&
+                <Components.ReportForm
+                  commentId={comment._id}
+                  postId={comment.postId}
+                  link={"/posts/" + comment.postId + "/a/" + comment._id}
+                  userId={currentUser._id}
+                  open={true}
+                />
+              }
+            </Components.CommentsMenu>
+        </span>
       )
-    }
-  }
-
-  renderStatsMenuItem = () => {
-    if (Users.canDo(this.props.currentUser, "comments.edit.all")) {
-      return <MenuItem primaryText="Stats" onClick={this.showStats} />
     }
   }
 
@@ -420,8 +377,15 @@ class CommentsItem extends Component {
       />
 }
 
+CommentsItem.propTypes = {
+  currentUser: PropTypes.object,
+  post: PropTypes.object.isRequired,
+  comment: PropTypes.object.isRequired
+}
+
 registerComponent('CommentsItem', CommentsItem,
   withRouter, withMessages,
-  withStyles(styles, { name: "CommentsItem" })
+  withStyles(styles, { name: "CommentsItem" }),
+  withErrorBoundary
 );
 export default CommentsItem;
