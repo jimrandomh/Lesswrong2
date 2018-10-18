@@ -8,4 +8,5 @@ class FormComponentDefault extends Component {
   }
 }
 
+// Replaces FormComponentDefault from vulcan-ui-bootstrap
 registerComponent("FormComponentDefault", FormComponentDefault);

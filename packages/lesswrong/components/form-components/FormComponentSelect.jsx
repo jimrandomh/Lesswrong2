@@ -19,4 +19,5 @@ class FormComponentSelect extends Component {
   }
 }
 
+// Replaces FormComponentSelect from vulcan-ui-bootstrap
 registerComponent("FormComponentSelect", FormComponentSelect);

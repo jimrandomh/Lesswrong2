@@ -42,7 +42,7 @@ class LWNotificationSettings extends PureComponent
   
   removeItem(index) {
     this.props.updateCurrentValues({ [`${this.props.path}.${index}`]: null });
-  };
+  }
 
   //
   // Go through this.context.deletedValues and see if any value matches both
@@ -94,6 +94,7 @@ class LWNotificationSettings extends PureComponent
               )
           )}
         </div>
+        {hasErrors ? <Components.FieldErrors errors={nestedArrayErrors} /> : null}
       </div>
     );
   }

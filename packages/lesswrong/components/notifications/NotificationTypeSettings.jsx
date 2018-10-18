@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import { notificationTypes } from '../../lib/subscriptions/notification_types';
 import CloseIcon from '@material-ui/icons/Close';
-import get from 'lodash/get';
 
 const styles = theme => ({
   root: {
@@ -31,7 +30,6 @@ class NotificationTypeSettings extends PureComponent
 {
   render() {
     const { classes, value, nestedFields, name, path, removeItem, itemIndex, ...otherProps } = this.props;
-    const { document } = this.props;
     
     const isArray = typeof itemIndex !== 'undefined';
     const notificationType = value.type;
@@ -58,11 +56,11 @@ class NotificationTypeSettings extends PureComponent
             )
           }
         </div>
-        {isArray && [
+        {isArray &&
           <a>
             <CloseIcon className={classes.closeIcon} onClick={() => removeItem(name)}/>
           </a>
-        ]}
+        }
       </div>
     );
   }
