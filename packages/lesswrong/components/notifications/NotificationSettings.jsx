@@ -56,7 +56,9 @@ class LWNotificationSettings extends PureComponent
   renderAddNotificationType() {
     const { classes } = this.props;
     return (<div className={classes.addNotificationType}>
-      <div>Add Notification Type</div>
+      <Typography variant="body2" component="label" className={classes.typeLabel}>
+        Add Notification Type
+      </Typography>
       <ul>
         {_.map(notificationTypes, (notif, key) => (<li key={key}>
           <a onClick={() => this.addNotificationType(key)}>{notif.name}</a>

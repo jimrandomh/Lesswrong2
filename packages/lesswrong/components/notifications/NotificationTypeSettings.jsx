@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import { notificationTypes } from '../../lib/subscriptions/notification_types';
 import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   root: {
@@ -39,9 +40,9 @@ class NotificationTypeSettings extends PureComponent
     
     return (
       <div className={classes.root}>
-        <label className={classes.typeLabel}>
+        <Typography variant="body2" component="label" className={classes.typeLabel}>
           {typeLabel}
-        </label>
+        </Typography>
         <div className={classes.settingsForm}>
           {nestedFields
             .filter(field => _.find(fieldsToShow, f=>f===field.name))
