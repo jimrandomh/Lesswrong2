@@ -5,6 +5,7 @@ import htmlparser2 from 'htmlparser2';
 import { HTTP } from 'meteor/http';
 import { URL } from 'url';
 import fs from 'fs';
+import moment from 'moment';
 
 const whitelistedImageHosts = [
   "lesswrong.com",
@@ -12,6 +13,7 @@ const whitelistedImageHosts = [
   "res.cloudinary.com"
 ];
 const baseUrl = "http://www.lesswrong.com";
+const numRetries = 2;
 
 // Parse an HTML string and return an array of URLs of images it refers to in
 // <img> tags.
@@ -52,6 +54,17 @@ function getLinksInHtml(html)
 }
 
 async function urlIsBroken(url)
+{
+  for(let i=0; i<numRetries+1; i++)
+  {
+    let broken = await urlIsBrokenNoRetry(url);
+    if(!broken) return false;
+  }
+  
+  return true;
+}
+
+async function urlIsBrokenNoRetry(url)
 {
   try {
     let absoluteUrl = new URL(url, baseUrl).toString();
@@ -135,12 +148,24 @@ const checkPost = async (post) => {
   }
 };
 
+const subdivideDateRange = (startDate, endDate, write) => {
+  const monthsCount = moment(endDate).diff(startDate, 'months');
+  write(`${monthsCount} months to check`);
+  
+  return _.range(monthsCount+1).map(
+    i => {
+      return {
+        after: moment.utc(startDate).add(i, 'months').format("YYYY-MM-DD"),
+        before: moment.utc(startDate).add(i+1, 'months').format("YYYY-MM-DD"),
+      }
+    }
+  );
+}
+
 Vulcan.findBrokenLinks = async (
   startDate, endDate,
   output
 ) => {
-  // TODO: Subdivide date range so we don't try to load all posts at once
-  // TODO: Retry "broken" links to remove false positives from the list
   let write = null;
   let onFinish = null;
   
@@ -156,25 +181,30 @@ Vulcan.findBrokenLinks = async (
   }
   
   write("Checking posts for broken links and images.\n");
-  let filter = {};
-  if(startDate || endDate) {
-    filter = {postedAt: {
-      $gte: startDate,
-      $lte: endDate
-    }};
-  }
-  const postsToCheck = await Posts.find(filter).fetch();
   
-  write("Checking "+postsToCheck.length+" post for broken links and images.\n");
-  for(let i=0; i<postsToCheck.length; i++)
+  let dateRanges = subdivideDateRange(startDate, endDate, write);
+  for(let i=0; i<dateRanges.length; i++)
   {
-    let post = postsToCheck[i];
-    let result = await checkPost(post);
-    if (result) {
-      write(result);
+    let dateRange = dateRanges[i];
+    let filter = {};
+    filter = {postedAt: {
+      $gte: new Date(dateRange.after),
+      $lte: new Date(dateRange.before)
+    }};
+    const postsToCheck = await Posts.find(filter).fetch();
+    write("Checking "+postsToCheck.length+" posts from "+dateRange.after+" to "+dateRange.before+".\n");
+    
+    for(let i=0; i<postsToCheck.length; i++)
+    {
+      let post = postsToCheck[i];
+      let result = await checkPost(post);
+      if (result) {
+        write(result);
+      }
     }
   }
-  write("Checked "+postsToCheck.length+" post for broken links and images.\n");
+  
+  write("Done!");
   
   if(onFinish) onFinish();
 }
