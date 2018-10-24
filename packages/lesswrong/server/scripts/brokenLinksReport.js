@@ -53,14 +53,23 @@ function getLinksInHtml(html)
   return links;
 }
 
+let urlIsBrokenCache = {};
+
 async function urlIsBroken(url)
 {
+  if(url in urlIsBrokenCache)
+    return url[urlIsBrokenCache];
+  
   for(let i=0; i<numRetries+1; i++)
   {
     let broken = await urlIsBrokenNoRetry(url);
-    if(!broken) return false;
+    if(!broken) {
+      urlIsBrokenCache[url] = false;
+      return false;
+    }
   }
   
+  urlIsBrokenCache[url] = true;
   return true;
 }
 
