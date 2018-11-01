@@ -10,6 +10,7 @@ import './modules/headtags.js'
 
 // ## Accounts
 import './modules/accounts/modify_accounts_ui.js';
+import './modules/accounts/configuration.js';
 
 // ## Voting
 import './modules/voting/new_vote_types.js';
@@ -70,6 +71,8 @@ import './collections/chapters/fragments.js';
 import './collections/sequences/fragments.js';
 import './collections/books/fragments.js';
 import './collections/collections/fragments.js';
+import './modules/alignment-forum/posts/fragments.js';
+import './modules/alignment-forum/users/fragments.js';
 
 import './collections/chapters/views.js';
 
@@ -129,19 +132,22 @@ import './modules/alignment-forum/graphql.js';
 
 import './modules/alignment-forum/posts/custom_fields.js';
 import './modules/alignment-forum/posts/callbacks.js';
-import './modules/alignment-forum/posts/fragments.js';
 import './modules/alignment-forum/posts/helpers.js';
+import './modules/alignment-forum/posts/views.js';
 
 import './modules/alignment-forum/comments/custom_fields.js';
 import './modules/alignment-forum/comments/callbacks.js';
+import './modules/alignment-forum/comments/helpers.js';
+import './modules/alignment-forum/comments/views.js';
+import './modules/alignment-forum/comments/fragments.js';
 
 import './modules/alignment-forum/sequences/custom_fields.js'
 import './modules/alignment-forum/sequences/callbacks.js';
 
+import './modules/alignment-forum/users/callbacks.js';
 import './modules/alignment-forum/users/custom_fields.js';
 import './modules/alignment-forum/users/helpers.js';
 import './modules/alignment-forum/users/views.js';
-import './modules/alignment-forum/users/fragments.js';
 
 
 
