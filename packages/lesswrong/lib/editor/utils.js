@@ -20,6 +20,20 @@ export const htmlToDraft = convertFromHTML({
         {url: node.href}
       )
     }
+    if (nodeName === 'span' && node.hasClass('sidenote-start')) {
+      return createEntity(
+        'SIDENOTESTART',
+        'IMMUTABLE',
+        {}
+      );
+    }
+    if (nodeName === 'span' && node.hasClass('sidenote-end')) {
+      return createEntity(
+        'SIDENOTEEND',
+        'IMMUTABLE',
+        {}
+      );
+    }
     // if (nodeName === 'img') {
     //   console.log("image detected: ", node, node.src)
     //   return createEntity(
@@ -70,24 +84,29 @@ export const draftToHTML = convertToHTML({
       }
       return `<figure><img src="${entity.data.src}" class="${classNames}" style="${style}" /></figure>`;
     }
-    if (entity.type === 'LINK') {
-      return {
-        start: `<a href="${entity.data.url || entity.data.href}">`,
-        end: '</a>',
-      };
+    else if (entity.type === 'LINK') {
+      return `<a href="${entity.data.url || entity.data.href}">${originalText}</a>`;
     }
-    if (entity.type === 'IMG') {
+    else if (entity.type === 'IMG') {
       const className = 'draft-inline-image';
       return `<img src="${entity.data.src}" class="${className}" alt="${entity.data.alt}"/>`
     }
-    if (entity.type === 'INLINETEX') {
+    else if (entity.type === 'INLINETEX') {
       if (entity.data.html) {
         return `<span>${entity.data.css ? `<style>${entity.data.css}</style>` : ""}${entity.data.html}</span>`
       } else {
         return `<span class="draft-latex-placeholder"> &lt; refresh to render LaTeX &gt; </span>`
       }
     }
-    return originalText;
+    else if (entity.type === 'SIDENOTESTART') {
+      return '<span class="sidenote-start">(</span>';
+    }
+    else if (entity.type === 'SIDENOTEEND') {
+      return '<span class="sidenote-end">)</span>';
+    }
+    else {
+      return originalText;
+    }
   },
   //eslint-disable-next-line react/display-name
   blockToHTML: (block) => {

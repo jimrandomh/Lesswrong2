@@ -13,9 +13,11 @@ import createBlockBreakoutPlugin from 'draft-js-block-breakout-plugin'
 import createDividerPlugin from './editor-plugins/divider';
 import createMathjaxPlugin from 'draft-js-mathjax-plugin'
 import createMarkdownShortcutsPlugin from './editor-plugins/markdown-shortcuts-plugin';
+import createSidenotePlugin from './editor-plugins/sidenotes';
 import { withTheme } from '@material-ui/core/styles';
 import { myKeyBindingFn } from './editor-plugins/keyBindings.js'
 import ImageButton from './editor-plugins/image/ImageButton.jsx';
+import SidenoteButton, { sidenoteInlineStyle } from './editor-plugins/sidenotes/SidenoteButton.jsx';
 import {
   createBlockStyleButton,
   ItalicButton,
@@ -44,8 +46,13 @@ const HeadlineTwoButton = createBlockStyleButton({
 });
 
 const styleMap = theme => ({
-  'CODE': theme.typography.code
+  'CODE': theme.typography.code,
+  
+  [sidenoteInlineStyle]: {
+    textDecoration: "underline" //TODO
+  }
 })
+
 
 class EditorForm extends Component {
   constructor(props) {
@@ -58,10 +65,12 @@ class EditorForm extends Component {
     const alignmentPlugin = createAlignmentPlugin();
     const focusPlugin = createFocusPlugin();
     const resizeablePlugin = createResizeablePlugin();
+    const sidenotePlugin = createSidenotePlugin();
     const decorator = composeDecorators(
       resizeablePlugin.decorator,
       alignmentPlugin.decorator,
       focusPlugin.decorator,
+      //...sidenotePlugin.decorators,
     );
 
     const dividerPlugin = createDividerPlugin({decorator});
@@ -77,6 +86,7 @@ class EditorForm extends Component {
       { button: BlockquoteButton,              commentEditor: true   },
       { button: dividerPlugin.DividerButton,   commentEditor: false  },
       { button: ImageButton,                   commentEditor: false  },
+      { button: SidenoteButton,                commentEditor: false  },
     ]
 
     const inlineToolbarPlugin = createInlineToolbarPlugin({
@@ -91,6 +101,7 @@ class EditorForm extends Component {
     const markdownShortcutsPlugin = createMarkdownShortcutsPlugin();
 
     const imagePlugin = createImagePlugin({ decorator });
+    
     let plugins = [
       inlineToolbarPlugin,
       alignmentPlugin,
@@ -101,7 +112,8 @@ class EditorForm extends Component {
       richButtonsPlugin,
       blockBreakoutPlugin,
       markdownShortcutsPlugin,
-      dividerPlugin
+      dividerPlugin,
+      sidenotePlugin
     ];
 
     if (isClient) {
