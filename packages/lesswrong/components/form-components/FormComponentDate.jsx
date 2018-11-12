@@ -4,13 +4,14 @@ import { registerComponent, Components } from 'meteor/vulcan:core';
 
 class FormComponentDate extends Component {
   render() {
-    return <Components.MuiTextField
-      {...this.props}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      type="date"
-    />
+    return (
+      <Components.TwoColumnForm label={this.props.label}>
+        <Components.MuiTextField
+          {...this.props}
+          type="date"
+        />
+      </Components.TwoColumnForm>
+    );
   }
 }
 

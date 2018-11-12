@@ -147,7 +147,11 @@ Users.addField([
       canUpdate: [Users.owns, 'sunshineRegiment', 'admins'],
       canCreate: ['members'],
       control: 'checkbox',
-      label: "Hide Intercom"
+      label: "Hide Intercom",
+      form: {
+        leftLabel: "Interface",
+        twoColumn: true,
+      },
     }
   },
 
@@ -166,7 +170,10 @@ Users.addField([
       canUpdate: [Users.owns, 'sunshineRegiment', 'admins'],
       canCreate: ['members'],
       control: 'checkbox',
-      label: "Activate Markdown Editor"
+      label: "Activate Markdown Editor",
+      form: {
+        twoColumn: true,
+      },
     }
   },
 
@@ -332,7 +339,7 @@ Users.addField([
       canCreate: [Users.ownsAndInGroup('trustLevel1'), 'sunshineRegiment', 'admins'],
       control: 'checkbox',
       blackbox: true,
-      order: 55,
+      order: 60,
     }
   },
 
@@ -358,7 +365,8 @@ Users.addField([
       canCreate: [Users.ownsAndInGroup('trustLevel1'), 'sunshineRegiment', 'admins'],
       optional: true,
       label: "Banned Users",
-      control: 'UsersListEditor'
+      control: 'UsersListEditor',
+      order: 55,
     }
   },
   {
@@ -649,7 +657,7 @@ Users.addField([
       canRead: ['guests'],
       canCreate: ['members'],
       canUpdate: [Users.owns, 'sunshineRegiment', 'admins'],
-      label: "Group Location",
+      label: "Location",
       control: 'LocationFormComponent',
       blackbox: true,
       optional: true

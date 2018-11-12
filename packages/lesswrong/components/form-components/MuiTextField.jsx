@@ -2,23 +2,22 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { registerComponent, Components } from 'meteor/vulcan:core';
 import TextField from '@material-ui/core/TextField';
+import FormLabel from '@material-ui/core/FormLabel';
 import classnames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
-  labelColor: {
-    color: theme.secondary
-  },
   textField: {
     fontSize: "15px",
-    width: 350,
+    width: "100%",
     [theme.breakpoints.down('md')]: {
       width: "100%",
     },
   },
   fullWidth: {
     width:"100%",
-  }
+  },
 })
 
 class MuiTextField extends PureComponent {
@@ -35,20 +34,16 @@ class MuiTextField extends PureComponent {
   render() {
     const { classes, value, select, children, label, multiLine, rows, fullWidth, type, defaultValue, InputLabelProps } = this.props
 
-    return <TextField
+    return <Components.TwoColumnForm label={label}>
+      <TextField
         select={select}
         value={value}
         defaultValue={defaultValue}
-        label={label}
         onChange={this.onChange}
         multiline={multiLine}
         rows={rows}
         type={type}
         fullWidth={fullWidth}
-        InputLabelProps={{
-          className: classes.cssLabel,
-          ...InputLabelProps
-        }}
         classes={{input: classes.input}}
         className={classnames(
           classes.textField,
@@ -57,6 +52,7 @@ class MuiTextField extends PureComponent {
       >
         {children}
       </TextField>
+    </Components.TwoColumnForm>;
   }
 }
 

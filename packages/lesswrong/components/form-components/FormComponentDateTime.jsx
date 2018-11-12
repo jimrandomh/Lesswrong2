@@ -30,8 +30,8 @@ class FormComponentDateTime extends Component {
 
     const date = value ? (typeof value === 'string' ? new Date(value) : value) : null;
 
-    return <FormControl>
-        <InputLabel className={classes.label}>{ label }</InputLabel>
+    return (<Components.TwoColumnForm label={label}>
+      <FormControl>
         <DateTimePicker
           placeholder={label}
           value={date}
@@ -43,7 +43,8 @@ class FormComponentDateTime extends Component {
           onChange={newDate => this.updateDate(newDate._d)}
           format={"x"}
         />
-    </FormControl>
+      </FormControl>
+    </Components.TwoColumnForm>);
   }
 }
 
@@ -61,5 +62,4 @@ FormComponentDateTime.contextTypes = {
 };
 
 // Replaces FormComponentDateTime from vulcan-ui-bootstrap.
-// TODO: This may not work right in nested contexts.
 registerComponent("FormComponentDateTime", FormComponentDateTime, withStyles(styles, { name: "FormComponentDateTime" }));

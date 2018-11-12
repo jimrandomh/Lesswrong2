@@ -79,22 +79,24 @@ class UsersListEditor extends Component {
     const { classes, label, currentUser } = this.props
 
     return (
-      <div className={classes.root}>
-        <Components.ErrorBoundary>
-          <Components.UsersSearchAutoComplete
-            clickAction={this.addUserId}
-            label={label}
+      <Components.TwoColumnForm label={label}>
+        <div className={classes.root}>
+          <Components.ErrorBoundary>
+            <Components.UsersSearchAutoComplete
+              clickAction={this.addUserId}
+              label={label}
+            />
+          </Components.ErrorBoundary>
+          <SortableList
+            axis="xy"
+            items={this.props.value}
+            onSortEnd={this.onSortEnd}
+            currentUser={currentUser}
+            removeItem={this.removeUserId}
+            shouldCancelStart={this.shouldCancelStart}
           />
-        </Components.ErrorBoundary>
-        <SortableList
-          axis="xy"
-          items={this.props.value}
-          onSortEnd={this.onSortEnd}
-          currentUser={currentUser}
-          removeItem={this.removeUserId}
-          shouldCancelStart={this.shouldCancelStart}
-        />
-      </div>
+        </div>
+      </Components.TwoColumnForm>
     )
   }
 }

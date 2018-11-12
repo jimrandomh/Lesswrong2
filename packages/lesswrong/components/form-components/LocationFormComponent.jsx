@@ -36,13 +36,13 @@ class LocationFormComponent extends Component {
 
   render() {
     if (this.props.document) {
-      return <div className="location-suggest">
+      return <Components.TwoColumnForm label={this.props.label}>
         <Geosuggest
           placeholder="Location"
           onSuggestSelect={this.handleSuggestSelect}
           initialValue={this.state.location}
         />
-      </div>
+      </Components.TwoColumnForm>
     } else {
       return null
     }
@@ -52,7 +52,6 @@ class LocationFormComponent extends Component {
 
 LocationFormComponent.contextTypes = {
   updateCurrentValues: PropTypes.func,
-  addToSuccessForm: PropTypes.func,
 };
 
 // TODO: This is not using the field name provided by the form. It definitely

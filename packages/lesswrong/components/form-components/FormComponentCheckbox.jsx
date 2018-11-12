@@ -27,21 +27,32 @@ class FormComponentCheckbox extends Component {
   }
 
   render() {
-    const { classes, label, disabled=false } = this.props
-    return <div className={classes.root}>
-        <Checkbox
-          className={classes.size}
-          checked={this.props.value}
-          onChange={(event, checked) => {
-            this.context.updateCurrentValues({
-              [this.props.path]: checked
-            })
-          }}
-          disabled={disabled}
-          disableRipple
-        />
-        <Typography className={classes.inline} variant="body2" component="label">{label}</Typography>
-    </div>
+    const { classes, label, leftLabel, disabled=false } = this.props
+    const checkbox = (<React.Fragment>
+      <Checkbox
+        className={classes.size}
+        checked={this.props.value}
+        onChange={(event, checked) => {
+          this.context.updateCurrentValues({
+            [this.props.path]: checked
+          })
+        }}
+        disabled={disabled}
+        disableRipple
+      />
+      <Typography className={classes.inline} variant="body2" component="label">{label}</Typography>
+    </React.Fragment>);
+    
+    if(this.props.twoColumn) {
+      return (
+        <Components.TwoColumnForm label={leftLabel}>
+          {checkbox}
+        </Components.TwoColumnForm>);
+    } else {
+      return <div className={classes.root}>
+        {checkbox}
+      </div>
+    }
   }
 }
 
