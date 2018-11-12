@@ -112,6 +112,8 @@ import '../components/posts/PostsGroupDetails.jsx';
 import '../components/posts/PostsVote.jsx';
 import '../components/posts/PostsStats.jsx';
 
+import '../components/questions/NewQuestionDialog.jsx';
+
 import '../components/localGroups/CommunityHome.jsx';
 import '../components/localGroups/CommunityMap.jsx';
 import '../components/localGroups/CommunityMapFilter.jsx';
