@@ -2,10 +2,12 @@
 import { Posts } from '../../lib/collections/posts'
 import Users from 'meteor/vulcan:users';
 import htmlparser2 from 'htmlparser2';
-import { HTTP } from 'meteor/http';
 import { URL } from 'url';
 import fs from 'fs';
+import http from 'http';
+import util from 'util';
 import moment from 'moment';
+import * as Parallel from 'async-parallel';
 
 const whitelistedImageHosts = [
   "lesswrong.com",
@@ -14,6 +16,8 @@ const whitelistedImageHosts = [
 ];
 const baseUrl = "http://www.lesswrong.com";
 const numRetries = 2;
+const parallelism = 16;
+const verbose = true;
 
 // Parse an HTML string and return an array of URLs of images it refers to in
 // <img> tags.
@@ -53,12 +57,23 @@ function getLinksInHtml(html)
   return links;
 }
 
+function getLinksAndImagesInHtml(html)
+{
+  return {
+    images: getImagesInHtml(html),
+    links: getLinksInHtml(html),
+  }
+}
+
 let urlIsBrokenCache = {};
 
 async function urlIsBroken(url)
 {
   if(url in urlIsBrokenCache)
-    return url[urlIsBrokenCache];
+    return urlIsBrokenCache[url];
+  
+  if (verbose)
+    console.log("Checking "+url);
   
   for(let i=0; i<numRetries+1; i++)
   {
@@ -77,7 +92,7 @@ async function urlIsBrokenNoRetry(url)
 {
   try {
     let absoluteUrl = new URL(url, baseUrl).toString();
-    let result = HTTP.call('GET', absoluteUrl, {timeout: 5000});
+    let result = await util.promisify(HTTP.call)('GET', absoluteUrl, {timeout: 5000});
     if (result.statusCode >= 300 && result.statusCode <= 399) {
       // Redirect. In principle this shouldn't happen because meteor's HTTP.call
       // is documented to follow redirects by default. But maybe it does happen.
@@ -85,11 +100,13 @@ async function urlIsBrokenNoRetry(url)
       console.log("Got "+result.statusCode+" redirect on "+absoluteUrl);
       return false;
     } else if (result.statusCode !== 200) {
+      console.log("Got "+result.statusCode+" redirect on "+absoluteUrl);
       return true;
     } else {
       return false;
     }
   } catch(e) {
+    console.log("Got exception on "+absoluteUrl);
     return true;
   }
 }
@@ -113,14 +130,31 @@ const describePost = async (post) =>
   return `${post.title} by ${author.displayName} [${post.baseScore}]\n    ${postLink}`;
 }
 
+// Take a list of posts, attempt to load the links/images in all of them in
+// parallel, and cache the results.
+async function precheckPostSet(posts)
+{
+  let allUrls = [];
+  for(let i=0; i<posts.length; i++) {
+    const {images, links} = getLinksAndImagesInHtml(posts[i].htmlBody);
+    for(let j=0; j<images.length; j++)
+      allUrls.push(images[j]);
+    for(let j=0; j<links.length; j++)
+      allUrls.push(links[j]);
+  }
+  
+  let distinctUrls = _.uniq(allUrls);
+  await Parallel.each(distinctUrls, async url => await urlIsBroken(url), parallelism);
+}
+
 // Check a post for broken images, broken links, and offsite images, and return
 // a human-readable string describing the outcome. If everything is good
 // (nothing broken), returns the empty string; otherwise the result (which is
 // meant to be handled by a person) includes the title/author/karma of the
 // post and a list of broken things within it.
 const checkPost = async (post) => {
-  const images = getImagesInHtml(post.htmlBody);
-  const links = getLinksInHtml(post.htmlBody);
+  console.log("Checking post: "+await describePost(post));
+  const { images, links } = getLinksAndImagesInHtml(post.htmlBody);
   
   let brokenImages = [];
   let offsiteImages = [];
@@ -159,7 +193,7 @@ const checkPost = async (post) => {
 
 const subdivideDateRange = (startDate, endDate, write) => {
   const monthsCount = moment(endDate).diff(startDate, 'months');
-  write(`${monthsCount} months to check`);
+  write(`${monthsCount} months to check\n`);
   
   return _.range(monthsCount+1).map(
     i => {
@@ -203,9 +237,13 @@ Vulcan.findBrokenLinks = async (
     const postsToCheck = await Posts.find(filter).fetch();
     write("Checking "+postsToCheck.length+" posts from "+dateRange.after+" to "+dateRange.before+".\n");
     
+    await precheckPostSet(postsToCheck);
+    
     for(let i=0; i<postsToCheck.length; i++)
     {
       let post = postsToCheck[i];
+      if (post.draft) continue;
+      if (post.baseScore < 5) continue;
       let result = await checkPost(post);
       if (result) {
         write(result);
