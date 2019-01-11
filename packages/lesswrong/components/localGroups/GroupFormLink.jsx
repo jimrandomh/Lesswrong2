@@ -2,7 +2,7 @@ import { Components, registerComponent, getFragment, withMessages } from 'meteor
 import React, { Component } from 'react';
 import { Localgroups } from '../../lib/index.js';
 import classNames from "classnames";
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router-dom'
 import withUser from '../common/withUser';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';

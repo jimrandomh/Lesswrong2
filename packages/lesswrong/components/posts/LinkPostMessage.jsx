@@ -2,7 +2,7 @@ import { Components, registerComponent } from 'meteor/vulcan:core';
 import { Posts } from '../../lib/collections/posts';
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import grey from '@material-ui/core/colors/grey';
 import PropTypes from 'prop-types';
 

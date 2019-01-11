@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import withErrorBoundary from '../common/withErrorBoundary'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import withUser from '../common/withUser'
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Posts } from "../../lib/collections/posts";
 import Icon from '@material-ui/core/Icon';
 

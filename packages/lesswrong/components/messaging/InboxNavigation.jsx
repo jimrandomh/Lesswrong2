@@ -6,11 +6,11 @@ The Navigation for the Inbox components
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import { Components, registerComponent, withList } from 'meteor/vulcan:core';
 import Conversations from '../../lib/collections/conversations/collection.js';
 import Typography from '@material-ui/core/Typography';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import grey from '@material-ui/core/colors/grey';
 import withUser from '../common/withUser';
 

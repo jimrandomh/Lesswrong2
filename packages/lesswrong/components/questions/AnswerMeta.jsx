@@ -5,7 +5,7 @@
 // import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 // // import LinkIcon from '@material-ui/icons/Link';
 // // import { Posts } from '../../lib/collections/posts';
-// // import { Link } from 'react-router';
+// // import { Link } from 'react-router-dom';
 // import { Comments } from '../../lib/collections/comments';
 //
 // const styles = theme => ({

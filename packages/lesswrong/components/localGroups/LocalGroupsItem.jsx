@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { registerComponent, Components } from 'meteor/vulcan:core';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const LocalGroupsItem = ({group}) => {
   if (group) {

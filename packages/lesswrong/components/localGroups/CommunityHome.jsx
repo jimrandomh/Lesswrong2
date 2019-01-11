@@ -5,9 +5,9 @@ import {
   withEdit
 } from 'meteor/vulcan:core';
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import Users from 'meteor/vulcan:users';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import withUser from '../common/withUser';
 
 class CommunityHome extends Component {

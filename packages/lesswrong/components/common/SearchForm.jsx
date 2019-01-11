@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { intlShape } from 'meteor/vulcan:i18n';
 import Formsy from 'formsy-react';
 import FRC from 'formsy-react-components';
-import { withRouter, Link } from 'react-router'
+import { withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const Input = FRC.Input;
 

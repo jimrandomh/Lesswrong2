@@ -1,5 +1,6 @@
 import { Components, registerComponent } from 'meteor/vulcan:core';
-import { withRouter, Link } from 'react-router';
+import { withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { legacyBreakpoints } from '../../lib/modules/utils/theme';

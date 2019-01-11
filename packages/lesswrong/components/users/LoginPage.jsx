@@ -1,6 +1,6 @@
 import { Components, registerComponent, } from 'meteor/vulcan:core';
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import withUser from '../common/withUser';
 
 class LoginPage extends Component {

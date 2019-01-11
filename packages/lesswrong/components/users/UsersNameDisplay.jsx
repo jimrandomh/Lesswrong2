@@ -2,7 +2,7 @@ import { registerComponent, Components, getSetting } from 'meteor/vulcan:core';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Users from 'meteor/vulcan:users';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const UsersNameDisplay = ({user}) => {
   return <Link to={Users.getProfileUrl(user)}>

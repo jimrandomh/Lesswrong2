@@ -2,7 +2,7 @@ import { Components, registerComponent, getRawComponent, getFragment, withMessag
 import { Posts } from '../../lib/collections/posts';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import withUser from '../common/withUser'
 

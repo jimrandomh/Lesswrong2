@@ -3,7 +3,7 @@ import { Components, registerComponent } from 'meteor/vulcan:core';
 import { Posts } from '../../lib/collections/posts';
 import { Comments } from '../../lib/collections/comments'
 import Users from 'meteor/vulcan:users';
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 
 const DateDisplay = ({column, document}) => {
   return <div>{document[column.name] && <Components.FormatDate date={document[column.name]}/>}</div>

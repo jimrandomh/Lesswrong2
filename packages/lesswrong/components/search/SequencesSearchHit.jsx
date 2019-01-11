@@ -1,5 +1,5 @@
 import { Components, registerComponent} from 'meteor/vulcan:core';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import React, { PureComponent } from 'react';
 

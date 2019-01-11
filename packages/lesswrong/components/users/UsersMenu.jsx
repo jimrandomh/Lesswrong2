@@ -2,7 +2,7 @@ import { Components, registerComponent, getSetting } from 'meteor/vulcan:core';
 import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import Users from 'meteor/vulcan:users';
 import { withApollo } from 'react-apollo';
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Components, registerComponent, getSetting, withList} from 'meteor/vulcan:core';
 import { Posts } from '../../lib/collections/posts';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 const CommunityMapWrapper = (props) => {
   const mapsAPIKey = getSetting('googleMaps.apiKey', null);

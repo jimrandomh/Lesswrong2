@@ -1,7 +1,7 @@
 import { Components, getRawComponent, registerComponent } from 'meteor/vulcan:core';
 import React from 'react';
 import { Posts } from '../../lib/collections/posts';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import Icon from '@material-ui/core/Icon';
 import classNames from 'classnames';
 import withErrorBoundary from '../common/withErrorBoundary'

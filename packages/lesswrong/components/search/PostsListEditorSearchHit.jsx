@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import { Components, registerComponent} from 'meteor/vulcan:core';
 import { Posts } from '../../lib/collections/posts';
-import { Link, withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';

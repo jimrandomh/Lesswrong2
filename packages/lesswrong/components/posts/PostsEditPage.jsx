@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Components, registerComponent, getSetting } from 'meteor/vulcan:core';
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router-dom'
 import Helmet from 'react-helmet';
 
 class PostsEditPage extends PureComponent {
