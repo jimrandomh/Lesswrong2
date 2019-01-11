@@ -47,7 +47,6 @@ import '../components/common/DraftJSRenderer.jsx';
 import '../components/common/HoverOver.jsx';
 import '../components/common/ErrorBoundary.jsx';
 import '../components/common/CloudinaryImage.jsx';
-import '../components/common/Logo.jsx';
 import '../components/common/SearchForm.jsx';
 import '../components/common/ContentItemBody.jsx';
 import '../components/common/Footer.jsx';
@@ -188,8 +187,6 @@ import '../components/search/UsersSearchInput.jsx';
 import '../components/search/SearchBarResults.jsx';
 import '../components/search/SearchPagination.jsx';
 
-
-import '../components/admin/AdminDashboard.jsx';
 
 import '../components/sunshineDashboard/AdminHome.jsx';
 import '../components/sunshineDashboard/AdminMetadata.jsx';
