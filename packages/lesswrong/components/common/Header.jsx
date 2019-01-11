@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Components, registerComponent, withEdit, getSetting } from 'meteor/vulcan:core';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import NoSSR from 'react-no-ssr';
 import Headroom from 'react-headroom'
@@ -125,7 +125,7 @@ class Header extends Component {
   render() {
     const { currentUser, classes, routes, location, params, client, theme, toc, searchResultsArea } = this.props
     const { notificationOpen, notificationHasOpened, navigationOpen, headroomPinnedOpen } = this.state
-    const routeName = routes[1].name
+    const routeName = routes && routes.length>1 && routes[1].name
     const query = location && location.query
     const { subtitleLink = "", subtitleText = "" } = getHeaderSubtitleData(routeName, query, params, client) || {}
     const notificationTerms = {view: 'userNotifications', userId: currentUser ? currentUser._id : "", type: "newMessage"}

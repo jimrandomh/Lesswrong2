@@ -6,8 +6,9 @@ import withUser from '../common/withUser';
 
 const Home = (props, context) => {
   const { currentUser, router } = props;
-  const currentView = _.clone(router.location.query).view || (currentUser && currentUser.currentFrontpageFilter) || (currentUser ? "frontpage" : "curated");
-  let recentPostsTerms = _.isEmpty(router.location.query) ? {view: currentView, limit: 10} : _.clone(router.location.query)
+  const query = (router && router.location && router.location.query) ? router.location.query : {};
+  const currentView = _.clone(query).view || (currentUser && currentUser.currentFrontpageFilter) || (currentUser ? "frontpage" : "curated");
+  let recentPostsTerms = _.isEmpty(query) ? {view: currentView, limit: 10} : _.clone(query)
 
   recentPostsTerms.forum = true
   if (recentPostsTerms.view === "curated" && currentUser) {

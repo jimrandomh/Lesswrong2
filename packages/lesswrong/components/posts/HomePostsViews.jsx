@@ -2,7 +2,7 @@ import { Components, registerComponent, withEdit } from 'meteor/vulcan:core';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { intlShape } from 'meteor/vulcan:i18n';
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import Icon from '@material-ui/core/Icon';
 import { withStyles } from '@material-ui/core/styles';
@@ -60,8 +60,9 @@ class HomePostsViews extends Component {
   }
 
   getCurrentView = () => {
-    const props = this.props;
-    return _.clone(props.router.location.query).view || props.defaultView || (props.currentUser && props.currentUser.currentFrontpageFilter) || (this.props.currentUser ? "frontpage" : "curated");
+    const {router, defaultView, currentUser} = this.props;
+    const query = (router && router.location && router.location.query) ? router.location.query : {};
+    return _.clone(query).view || defaultView || (currentUser && currentUser.currentFrontpageFilter) || (currentUser ? "frontpage" : "curated");
   }
 
   renderMenu = (viewData, view) => {
