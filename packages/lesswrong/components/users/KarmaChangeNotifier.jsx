@@ -16,11 +16,13 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import { getHeaderTextColor } from '../common/Header';
 import MenuItem from '@material-ui/core/MenuItem';
 import { karmaNotificationTimingChoices } from './KarmaChangeNotifierSettings'
+import SettingsIcon from '@material-ui/icons/Settings';
 
 const styles = theme => ({
   karmaNotifierButton: {
   },
   karmaNotifierPaper: {
+    paddingBottom: 8,
   },
   karmaNotifierPopper: {
     zIndex: theme.zIndexes.karmaChangeNotifier,
@@ -32,7 +34,7 @@ const styles = theme => ({
     display: 'block',
     paddingTop: theme.spacing.unit * 2,
     paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
+    paddingRight: 45,
     paddingBottom: theme.spacing.unit
   },
   votedItems: {
@@ -51,7 +53,7 @@ const styles = theme => ({
     whiteSpace: "nowrap",
     overflow: "hidden",
     maxWidth: 250,
-    textOverflow: "ellipsis"
+    textOverflow: "ellipsis",
     
     height: 20,
     top: 3,
@@ -74,17 +76,16 @@ const styles = theme => ({
   lostPoints: {
     color: theme.palette.error.main,
   },
-  settings: {
-    display: 'block',
-    textAlign: 'right',
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit * 2,
-    paddingLeft: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
-    color: theme.palette.grey[600],
-    '&:hover': {
-      color: theme.palette.grey[500]
-    }
+  settingsGear: {
+    position: "absolute",
+    padding: 8,
+    top: 11,
+    right: 11,
+    
+    "& svg": {
+      width: 14,
+      height: 14,
+    },
   },
 });
 
@@ -106,11 +107,20 @@ const KarmaChangesDisplay = ({karmaChanges, classes, handleClose }) => {
   const noKarmaChanges = !((posts && (posts.length > 0)) || (comments && (comments.length > 0)))
   return (
     <Typography variant="body2">
+      <Link to={`/account`} onClick={handleClose}> 
+        <IconButton className={classes.settingsGear}>
+          <SettingsIcon/>
+        </IconButton>
+      </Link>
       {noKarmaChanges ?
-        <span className={classes.title}>{ karmaNotificationTimingChoices[updateFrequency].emptyText }</span>
+        <span className={classes.title}>
+          { karmaNotificationTimingChoices[updateFrequency].emptyText }
+        </span>
         :
         <div>
-          <span className={classes.title}>{ karmaNotificationTimingChoices[updateFrequency].infoText }</span>
+          <span className={classes.title}>
+            { karmaNotificationTimingChoices[updateFrequency].infoText }
+          </span>
           <div className={classes.votedItems}>
             {karmaChanges.posts && karmaChanges.posts.map((postChange,i) => (
               <MenuItem
@@ -139,9 +149,6 @@ const KarmaChangesDisplay = ({karmaChanges, classes, handleClose }) => {
           </div>
         </div>
         }
-      <Link to={`/account`} onClick={handleClose}> 
-        <span className={classes.settings}>Change Settings </span>
-      </Link>
     </Typography>
   );
 }
