@@ -52,6 +52,10 @@ const styles = theme => ({
     overflow: "hidden",
     maxWidth: 250,
     textOverflow: "ellipsis"
+    
+    height: 20,
+    top: 3,
+    position: "relative",
   },
   
   singleLinePreview: {
